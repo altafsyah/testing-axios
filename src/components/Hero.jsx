@@ -2,7 +2,7 @@ import { Image, Container } from "react-bootstrap";
 
 const Hero = () => {
   return (
-    <div style={{ background: "#F1F3FF", height: "60vh" }}>
+    <div className="position-relative" style={{ background: "#F1F3FF", height: "60vh" }}>
       <Container className="h-100 d-flex justify-content-start align-items-center">
         <div className="w-50 z-0">
           <h1>Sewa & Rental Mobil Terbaik di kawasan (Lokasimu)</h1>

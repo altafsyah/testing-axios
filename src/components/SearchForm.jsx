@@ -1,9 +1,7 @@
-import { useContext } from "react";
+/* eslint-disable react/prop-types */
 import { Container, Form, Card, Row, Col, Button } from "react-bootstrap";
-import { SearchContext } from "../context/search_context";
-import { useNavigate } from "react-router-dom";
 
-const CAR_CAPACITY = [
+export const CAR_CAPACITY = [
   {
     id: "small",
     title: "2 - 4 Orang",
@@ -18,7 +16,7 @@ const CAR_CAPACITY = [
   },
 ];
 
-const PRICE_RANGE = [
+export const PRICE_RANGE = [
   {
     id: 0,
     minPrice: 0,
@@ -39,51 +37,22 @@ const PRICE_RANGE = [
   },
 ];
 
-const SearchForm = ({ title, buttonTitle = "search" }) => {
-  const history = useNavigate();
-
-  const { cars, searchParams, setSearchParams, funcSearch } =
-    useContext(SearchContext);
-  console.log(searchParams);
-
-  const onChangeHandler = (event) => {
-    const { value, name } = event.target;
-    switch (name) {
-      case "name":
-        setSearchParams({ ...searchParams, name: value });
-        break;
-      case "category":
-        setSearchParams({ ...searchParams, category: value });
-        break;
-      case "price":
-        setSearchParams({
-          ...searchParams,
-          minPrice: PRICE_RANGE[value].minPrice,
-          maxPrice: PRICE_RANGE[value].maxPrice,
-        });
-        break;
-      default:
-        break;
-    }
-  };
-
-  const onSubmitHandler = async (event) => {
-    const urlPath = window.location.pathname;
-    event.preventDefault();
-    await funcSearch();
-    console.log(cars);
-    if (urlPath != "/search") {
-      history("/search");
-    }
-  };
-
+const SearchForm = ({
+  title,
+  buttonTitle = "search",
+  onChangeHandler,
+  onSubmitHandler,
+}) => {
   return (
     <Container
-      className="px-10 position-absolute start-50 translate-middle-x"
-      style={{ top: "90%" }}
+      className="mb-5"
+      // style={{ top: "90%", left: "50%" }}
     >
       <Card className="py-4 px-4 shadow">
-        <Form className="" onSubmit={onSubmitHandler}>
+        <Form
+          className=""
+          //  onSubmit={onSubmitHandler}
+        >
           {title && (
             <Row>
               <Col>{title}</Col>
@@ -106,9 +75,9 @@ const SearchForm = ({ title, buttonTitle = "search" }) => {
                 <Form.Label>Kategori</Form.Label>
                 <Form.Select onChange={onChangeHandler} name="category">
                   <option value="">Masukkan Kapasitas Mobil</option>
-                  {CAR_CAPACITY.map((cat) => {
+                  {CAR_CAPACITY.map((cat, index) => {
                     return (
-                      <option key={cat.id} value={cat.id}>
+                      <option key={cat.id} value={index}>
                         {cat.title}
                       </option>
                     );
@@ -120,7 +89,7 @@ const SearchForm = ({ title, buttonTitle = "search" }) => {
               <Form.Group>
                 <Form.Label>Harga</Form.Label>
                 <Form.Select name="price" onChange={onChangeHandler}>
-                  <option>Masukkan Harga Sewa/Hari</option>
+                  <option value="">Masukkan Harga Sewa/Hari</option>
                   {PRICE_RANGE.map((price) => (
                     <option key={price.id} value={price.id}>
                       {price.title}
@@ -132,7 +101,11 @@ const SearchForm = ({ title, buttonTitle = "search" }) => {
             <Col className="col-2">
               <Form.Group>
                 <Form.Label>Status</Form.Label>
-                <Form.Select className="">
+                <Form.Select
+                  className=""
+                  name="is_rented"
+                  onChange={onChangeHandler}
+                >
                   <option value={true}>Disewakan</option>
                   <option value={false}>Tidak Disewakan</option>
                 </Form.Select>
@@ -140,7 +113,8 @@ const SearchForm = ({ title, buttonTitle = "search" }) => {
             </Col>
             <Col className="col-2">
               <Button
-                type="submit"
+                type="button"
+                onClick={onSubmitHandler}
                 className="w-100"
                 variant={`${
                   buttonTitle == "search" ? "primary" : "outline-primary"
